@@ -1,0 +1,55 @@
+# ───────────────────────────────────────────────
+# Catedral — .gitignore
+# ───────────────────────────────────────────────
+
+# ── Secretos / datos sensibles ──────────────────
+# nunca commitear claves, certs, bases de datos ni loot
+*.key
+*.cert
+*.pem
+*.db
+*.db-shm
+*.db-wal
+**/loot/
+
+# ── Runtime data del teamserver ─────────────────
+# toolchains mingw, db, certs, loot (≈1GB) — se generan/descargan
+data/
+teamserver/data/
+
+# ── Bases de datos del cliente ──────────────────
+client/data/client.db
+
+# ── Artefactos de build (C/C++ / CMake) ─────────
+client/Build/
+client/build/
+client/Build2/
+**/cmake-build-debug/
+**/CMakeCache.txt
+**/CMakeFiles/
+
+# ── Binarios compilados ─────────────────────────
+/catedral
+client/Catedral
+teamserver/teamserver
+teamserver/GA-Teamserver.bin
+
+# ── Payloads compilados (la fuente sí se commitea) ─
+payloads/*.bin
+payloads/Shellcode/Bin/
+payloads/**/*.exe
+payloads/**/*.dll
+payloads/**/*.o
+
+# ── Go ──────────────────────────────────────────
+# go.sum SÍ se commitea (lockfile reproducible)
+
+# ── IDE / editores ──────────────────────────────
+**/.idea/
+.vscode/
+*.swp
+*~
+
+# ── OS ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
