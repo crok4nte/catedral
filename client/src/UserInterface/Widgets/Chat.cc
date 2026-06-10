@@ -55,6 +55,7 @@ void CatedralNamespace::UserInterface::Widgets::Chat::setupUi( QWidget *Form )
             );
 
     label->setText( CatedralX::Teamserver.User );
+    lineEdit->setPlaceholderText( "Message the team as " + CatedralX::Teamserver.User + "  —  press Enter to send" );
     connect( lineEdit, &QLineEdit::returnPressed, this, &Chat::AppendFromInput );
 
     QMetaObject::connectSlotsByName(Form);
@@ -69,10 +70,27 @@ void CatedralNamespace::UserInterface::Widgets::Chat::AppendText(const QString& 
 
 void CatedralNamespace::UserInterface::Widgets::Chat::AddUserMessage(const QString Time, QString User, QString text) const
 {
-    if ( CatedralX::Teamserver.User.compare( User ) == 0 )
-        this->AppendText( Time, "[" + Util::ColorText::UnderlineGreen( User ) + "]" + Util::ColorText::Bold(" :: ") + text );
-    else
-        this->AppendText( Time, "[" + Util::ColorText::Underline( User ) + "]" + Util::ColorText::Bold(" :: ") + text );
+    // Estructura moderna: cabecera (avatar-inicial + nombre en acento + hora tenue)
+    // y el mensaje en su propia linea debajo, con sangria. Distingue mensajes
+    // propios (acento steel-blue) de los del resto del equipo (cyan).
+    const bool    self   = ( CatedralX::Teamserver.User.compare( User ) == 0 );
+    const QString accent = self ? "#6E8FB0" : "#5BC0EB";
+    const QString safeUser = User.toHtmlEscaped();
+    const QString initial  = safeUser.isEmpty() ? QString( "?" ) : safeUser.left( 1 ).toUpper();
+
+    const QString html =
+        "<div style=\"margin:10px 0 0 0;\">"
+            "<span style=\"background-color:" + accent + "; color:#0E0E10; "
+                   "font-weight:700; padding:1px 6px; border-radius:4px;\">" + initial + "</span>"
+            "<span style=\"color:" + accent + "; font-weight:700;\">&nbsp;&nbsp;" + safeUser + "</span>"
+            "<span style=\"color:#6A6A72;\">&nbsp;&nbsp;" + Time.toHtmlEscaped() + "</span>"
+        "</div>"
+        "<div style=\"color:#E6E6E6; margin:2px 0 2px 10px; "
+               "border-left:2px solid " + accent + "; padding-left:8px;\">"
+            + text.toHtmlEscaped() +
+        "</div>";
+
+    EventLogText->append( html );
 }
 
 void CatedralNamespace::UserInterface::Widgets::Chat::AppendFromInput()

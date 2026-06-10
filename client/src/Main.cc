@@ -9,6 +9,9 @@ auto main(
     auto CatedralApp = QApplication( argc, argv );
     auto Status   = 0;
 
+    QApplication::setOrganizationName( "Catedral" );
+    QApplication::setApplicationName( "Catedral" );
+
     QGuiApplication::setWindowIcon( QIcon( ":/Catedral.ico" ) );
 
     CatedralNamespace::CatedralApplication = new CatedralNamespace::CatedralSpace::Catedral( new QMainWindow );

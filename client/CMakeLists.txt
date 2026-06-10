@@ -24,7 +24,7 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 include_directories( include  )
 include_directories( external/spdlog/include )
 include_directories( external/json/include )
-include_directories( external/toml )
+include_directories( external/tomlplusplus )
 
 ##
 ## find qt packages

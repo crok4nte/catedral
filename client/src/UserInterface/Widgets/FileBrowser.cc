@@ -330,6 +330,10 @@ void FileBrowser::onButtonUp()
 void FileBrowser::onTableMenuDownload(){
     auto Item = ( ( FileBrowserTableItem* ) TableFileBrowser->item( TableFileBrowser->currentRow(), 0 ) );
 
+    // currentRow() devuelve -1 sin seleccion -> item() es nullptr.
+    if ( Item == nullptr )
+        return;
+
     if ( Item->Data.Type.compare( "dir" ) == 0 )
     {
 
@@ -448,7 +452,9 @@ void FileBrowser::TreeUpdate()
         auto Split = Data.Path.split( "\\" );
 
         // check if any Dir contains an empty space. if so then remove it.
-        for ( int i = 0; i < Split.size(); i++ )
+        // Iterar hacia atras: removeAt() hacia adelante saltaba el elemento
+        // siguiente y dejaba cadenas vacias consecutivas sin eliminar.
+        for ( int i = Split.size() - 1; i >= 0; i-- )
         {
             if ( Split[ i ].compare( "" ) == 0 )
                 Split.removeAt( i );

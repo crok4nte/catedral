@@ -61,14 +61,19 @@ void CatedralNamespace::UserInterface::Widgets::SessionTable::setupUi(QWidget *F
     SessionTableWidget->setEnabled( true );
     SessionTableWidget->setShowGrid( false );
     SessionTableWidget->setSortingEnabled( false );
-    SessionTableWidget->setWordWrap( true );
+    SessionTableWidget->setWordWrap( false );
     SessionTableWidget->setCornerButtonEnabled( true );
+    SessionTableWidget->setAlternatingRowColors( true );
     SessionTableWidget->horizontalHeader()->setVisible( true );
+    SessionTableWidget->horizontalHeader()->setHighlightSections( false );
+    SessionTableWidget->horizontalHeader()->setMinimumHeight( 30 );
     SessionTableWidget->setSelectionBehavior( QAbstractItemView::SelectRows );
+    SessionTableWidget->setSelectionMode( QAbstractItemView::SingleSelection );
     SessionTableWidget->setContextMenuPolicy( Qt::CustomContextMenu );
     SessionTableWidget->horizontalHeader()->setSectionResizeMode( QHeaderView::ResizeMode::Stretch );
     SessionTableWidget->horizontalHeader()->setStretchLastSection( true );
     SessionTableWidget->verticalHeader()->setVisible( false );
+    SessionTableWidget->verticalHeader()->setDefaultSectionSize( 32 );
     SessionTableWidget->setFocusPolicy( Qt::NoFocus );
 
     SessionTableWidget->horizontalHeaderItem( 0 )->setSizeHint( QSize( 0, 0 ) );

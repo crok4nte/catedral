@@ -118,7 +118,7 @@ void CatedralSpace::Catedral::Start()
     sidebar->addItem( ":/icons/SidebarLoot",      "Loot",           this->CatedralAppUI.actionLoot );
     sidebar->addItem( ":/icons/SidebarChat",      "Chat",           this->CatedralAppUI.actionChat );
     sidebar->addItem( ":/icons/SidebarLogs",      "Event Logs",     this->CatedralAppUI.actionLogs );
-    sidebar->addItem( ":/icons/SidebarHelp",      "Help",           this->CatedralAppUI.actionAbout );
+    sidebar->addItem( ":/icons/SidebarHelp",      "About",          this->CatedralAppUI.actionAbout );
     sidebar->addStretch();
 
     auto* shellWrapper = new QWidget( this->CatedralMainWindow );

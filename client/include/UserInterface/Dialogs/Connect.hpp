@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QListWidget>
 #include <QPlainTextEdit>
+#include <QFrame>
 #include <QList>
 
 using namespace std;
@@ -14,6 +15,17 @@ class CatedralNamespace::UserInterface::Dialogs::Connect : public QDialog
 {
 private:
     QGridLayout*    gridLayout;
+
+    // Catedral v2 connect dialog — branded two-panel layout.
+    QFrame*         brandPanel;
+    QFrame*         formPanel;
+    QLabel*         brandTitle;
+    QLabel*         brandTagline;
+    QLabel*         brandVersion;
+    QLabel*         brandGlyph;
+    QLabel*         profilesCaption;
+    QLabel*         formHeader;
+    QLabel*         formHint;
 
     QPlainTextEdit* plainTextEdit;
     QLabel*         label_Name;

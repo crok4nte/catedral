@@ -1,0 +1,32 @@
+# Catedral Framework — Carbon design tokens
+# Modify these and regenerate Catedral.qss with build_theme.py
+
+colors:
+  bg_base:        "#0E0E10"
+  bg_surface:     "#161618"
+  bg_surface_2:   "#1C1C1F"
+  border:         "#2A2A2E"
+  border_strong:  "#3A3A3F"
+  text_primary:   "#E6E6E6"
+  text_muted:     "#9A9AA0"
+  text_disabled:  "#5A5A60"
+  accent:         "#E5484D"
+  accent_hover:   "#F2555A"
+  accent_pressed: "#C13C3F"
+  success:        "#3FB950"
+  warning:        "#D29922"
+  danger:         "#F85149"
+  selection_bg:   "#4A1518"
+
+radius:
+  sm: "4px"
+  md: "6px"
+  lg: "8px"
+
+typography:
+  ui_family:    "'Space Grotesk', 'Inter', 'Segoe UI', Roboto, sans-serif"
+  mono_family:  "'JetBrains Mono', 'Cascadia Code', Consolas, monospace"
+  size_base:    "13px"
+  size_dense:   "12px"
+  size_status:  "11px"
+  size_heading: "15px"

@@ -43,41 +43,54 @@ void CatedralNamespace::UserInterface::Widgets::ListenersTable::setupUi( QWidget
     gridLayout->addItem( horizontalSpacer, 1, 0, 1, 1 );
 
     tableWidget = new QTableWidget( Form );
-    if ( tableWidget->columnCount() < 5 )
-        tableWidget->setColumnCount( 5 );
+    if ( tableWidget->columnCount() < 6 )
+        tableWidget->setColumnCount( 6 );
 
     tableWidget->setHorizontalHeaderItem( 0, new QTableWidgetItem( "Name" )     );
     tableWidget->setHorizontalHeaderItem( 1, new QTableWidgetItem( "Protocol" ) );
     tableWidget->setHorizontalHeaderItem( 2, new QTableWidgetItem( "Host" )     );
-    tableWidget->setHorizontalHeaderItem( 3, new QTableWidgetItem( "PortBind" ) );
-    tableWidget->setHorizontalHeaderItem( 4, new QTableWidgetItem( "PortConn" ) );
+    tableWidget->setHorizontalHeaderItem( 3, new QTableWidgetItem( "Port Bind" ) );
+    tableWidget->setHorizontalHeaderItem( 4, new QTableWidgetItem( "Port Conn" ) );
     tableWidget->setHorizontalHeaderItem( 5, new QTableWidgetItem( "Status" )   );
 
-    tableWidget->setObjectName( QString::fromUtf8( "tableWidget" ) );
+    tableWidget->setObjectName( QString::fromUtf8( "ListenersTable" ) );
     tableWidget->setMouseTracking( false );
     tableWidget->setContextMenuPolicy( Qt::ActionsContextMenu );
     tableWidget->setAutoFillBackground( false );
     tableWidget->horizontalHeader()->setSectionResizeMode( QHeaderView::Stretch );
     tableWidget->setShowGrid( false );
     tableWidget->setSortingEnabled( false );
-    tableWidget->setWordWrap( true );
+    tableWidget->setWordWrap( false );
     tableWidget->setCornerButtonEnabled( true );
+    tableWidget->setAlternatingRowColors( true );
     tableWidget->horizontalHeader()->setVisible( true );
     tableWidget->horizontalHeader()->setCascadingSectionResizes( false );
     tableWidget->horizontalHeader()->setHighlightSections( false );
+    tableWidget->horizontalHeader()->setMinimumHeight( 30 );
     tableWidget->verticalHeader()->setVisible( false );
     tableWidget->setSelectionBehavior( QAbstractItemView::SelectRows );
     tableWidget->setSelectionMode( QAbstractItemView::SingleSelection );
-    tableWidget->verticalHeader()->setDefaultSectionSize( 12 );
+    tableWidget->verticalHeader()->setDefaultSectionSize( 32 );
     tableWidget->setFocusPolicy( Qt::NoFocus );
 
     gridLayout->addWidget( tableWidget, 0, 0, 1, 6 );
 
     Form->setWindowTitle( QCoreApplication::translate( "Form", "Listener", nullptr ) );
 
-    buttonAdd->setText( QCoreApplication::translate(" Form", "Add", nullptr ) );
-    buttonEdit->setText( QCoreApplication::translate( "Form", "Edit", nullptr ) );
-    buttonRemove->setText( QCoreApplication::translate( "Form", "Remove", nullptr ) );
+    buttonAdd->setText( "Add Listener" );
+    buttonEdit->setText( "Edit" );
+    buttonRemove->setText( "Remove" );
+
+    buttonAdd->setProperty( "primary", true );
+    buttonRemove->setProperty( "danger", true );
+
+    buttonAdd->setCursor( Qt::PointingHandCursor );
+    buttonEdit->setCursor( Qt::PointingHandCursor );
+    buttonRemove->setCursor( Qt::PointingHandCursor );
+
+    buttonAdd->setMinimumHeight( 32 );
+    buttonEdit->setMinimumHeight( 32 );
+    buttonRemove->setMinimumHeight( 32 );
 
     ButtonsInit();
     QMetaObject::connectSlotsByName( Form );
@@ -257,17 +270,22 @@ void CatedralNamespace::UserInterface::Widgets::ListenersTable::ListenerAdd( Uti
     item_PortConn->setFlags( item_PortConn->flags() ^ Qt::ItemIsEditable );
     item_PortConn->setTextAlignment( Qt::AlignLeft );
 
-    item_Status->setText( item.Status.c_str() );
     item_Status->setFlags( item_Status->flags() ^ Qt::ItemIsEditable );
-    item_Status->setTextAlignment( Qt::AlignLeft );
+    item_Status->setTextAlignment( Qt::AlignLeft | Qt::AlignVCenter );
 
     if ( item.Status.compare( "Online" ) == 0 )
     {
+        item_Status->setText( "\xE2\x97\x8F  Online" );   // ● Online
         item_Status->setForeground( QColor( Util::ColorText::Colors::Hex::Green ) );
     }
     else if ( item.Status.compare( "Offline" ) == 0 )
     {
+        item_Status->setText( "\xE2\x97\x8F  Offline" );  // ● Offline
         item_Status->setForeground( QColor( Util::ColorText::Colors::Hex::Red ) );
+    }
+    else
+    {
+        item_Status->setText( item.Status.c_str() );
     }
 
     tableWidget->setItem( tableWidget->rowCount() - 1, 0, item_Name );

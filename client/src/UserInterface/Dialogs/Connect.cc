@@ -6,6 +6,33 @@
 
 #include <UserInterface/Dialogs/Connect.hpp>
 
+#include <QFrame>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+namespace {
+
+// Pequeño helper para una etiqueta de campo (caption) sobre cada input.
+QLabel* FieldCaption( QWidget* parent, const QString& text )
+{
+    auto* l = new QLabel( text, parent );
+    l->setObjectName( "ConnectFieldCaption" );
+    return l;
+}
+
+// Construye un campo (caption + input) dentro de un layout vertical compacto.
+QVBoxLayout* FieldBlock( QLabel* caption, QLineEdit* input )
+{
+    auto* v = new QVBoxLayout();
+    v->setSpacing( 4 );
+    v->setContentsMargins( 0, 0, 0, 0 );
+    v->addWidget( caption );
+    v->addWidget( input );
+    return v;
+}
+
+} // namespace
+
 void CatedralNamespace::UserInterface::Dialogs::Connect::setupUi( QDialog* Form )
 {
     this->ConnectDialog = Form;
@@ -13,96 +40,158 @@ void CatedralNamespace::UserInterface::Dialogs::Connect::setupUi( QDialog* Form 
     if ( Form->objectName().isEmpty() )
         Form->setObjectName( QString::fromUtf8( "Form" ) );
 
-    Form->resize( 500, 260 );
-    Form->setMinimumSize( QSize( 500, 260 ) );
-    Form->setMaximumSize( QSize( 500, 260 ) );
+    Form->setObjectName( "ConnectDialog" );
+    Form->resize( 760, 480 );
+    Form->setMinimumSize( QSize( 760, 480 ) );
+    Form->setMaximumSize( QSize( 760, 480 ) );
 
-    // removed in Catedral Phase 3 (legacy stylesheet)
-    // Form->setStyleSheet( FileRead( ":/stylesheets/Dialogs/Connect" ) );
+    // El dialogo corre antes de que la ventana principal aplique el tema,
+    // por eso lo estilizamos aqui directamente con el QSS global de Catedral.
+    Form->setStyleSheet( FileRead( ":/stylesheets/Catedral" ) );
 
-    gridLayout = new QGridLayout( Form );
-    gridLayout->setObjectName( QString::fromUtf8( "gridLayout" ) );
+    // ---- Layout raiz: dos paneles (brand | formulario) ----
+    auto* root = new QHBoxLayout( Form );
+    root->setContentsMargins( 0, 0, 0, 0 );
+    root->setSpacing( 0 );
 
-    plainTextEdit = new QPlainTextEdit( Form );
-    plainTextEdit->setObjectName( QString::fromUtf8( "plainTextEdit" ) );
-    plainTextEdit->setMaximumSize( QSize( 16777215, 45 ) );
-    plainTextEdit->setMinimumSize( QSize( 0, 45 ) );
-    plainTextEdit->setReadOnly( true );
-    plainTextEdit->setPlainText( "Catedral connection dialog. Connect to a Catedral teamserver." );
+    // =====================================================================
+    //  Panel izquierdo: marca + lista de perfiles
+    // =====================================================================
+    brandPanel = new QFrame( Form );
+    brandPanel->setObjectName( "ConnectBrand" );
+    brandPanel->setFixedWidth( 280 );
 
-    label_Port = new QLabel( Form );
-    label_Port->setObjectName( QString::fromUtf8( "label_Port" ) );
+    auto* brandLayout = new QVBoxLayout( brandPanel );
+    brandLayout->setContentsMargins( 24, 28, 24, 24 );
+    brandLayout->setSpacing( 0 );
 
-    ButtonNewProfile = new QPushButton( Form );
-    ButtonNewProfile->setObjectName( QString::fromUtf8( "ButtonNewProfile" ) );
-    ButtonNewProfile->setMinimumSize( QSize( 10, 30 ) );
+    brandGlyph = new QLabel( "\xE2\x9B\xAA", brandPanel ); // ⛪ glifo catedral
+    brandGlyph->setObjectName( "ConnectBrandGlyph" );
 
-    label_Name = new QLabel( Form );
-    label_Name->setObjectName( QString::fromUtf8( "label_Name" ) );
+    brandTitle = new QLabel( "CATEDRAL", brandPanel );
+    brandTitle->setObjectName( "ConnectBrandTitle" );
 
-    lineEdit_Name = new QLineEdit( Form );
-    lineEdit_Name->setObjectName( QString::fromUtf8( "lineEdit_Name" ) );
-    lineEdit_Name->setMinimumSize( QSize( 150, 0 ) );
+    brandTagline = new QLabel( "Command & Control", brandPanel );
+    brandTagline->setObjectName( "ConnectBrandTagline" );
 
-    lineEdit_Host = new QLineEdit( Form );
-    lineEdit_Host->setObjectName( QString::fromUtf8( "lineEdit_Host" ) );
-
-    lineEdit_Port = new QLineEdit( Form );
-    lineEdit_Port->setObjectName( QString::fromUtf8( "lineEdit_Port" ) );
-
-    lineEdit_User = new QLineEdit( Form );
-    lineEdit_User->setObjectName( QString::fromUtf8( "lineEdit_User" ) );
-
-    lineEdit_Password = new QLineEdit( Form );
-    lineEdit_Password->setObjectName( QString::fromUtf8( "lineEdit_Password" ) );
-    lineEdit_Password->setEchoMode( QLineEdit::Password );
-
-    label_User = new QLabel( Form );
-    label_User->setObjectName( QString::fromUtf8( "label_User" ) );
-
-    ButtonConnect = new QPushButton( Form );
-    ButtonConnect->setObjectName( QString::fromUtf8( "ButtonConnect" ) );
-
-    label_Host = new QLabel( Form );
-    label_Host->setObjectName( QString::fromUtf8( "label_Host" ) );
-
-    label_Password = new QLabel( Form );
-    label_Password->setObjectName( QString::fromUtf8( "label_Password" ) );
-
-    horizontalSpacer = new QSpacerItem( 40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum );
+    profilesCaption = new QLabel( "TEAMSERVER PROFILES", brandPanel );
+    profilesCaption->setObjectName( "ConnectSectionCaption" );
 
     listContextMenu = new QMenu( this );
     listContextMenu->addAction( "Remove", this, &Connect::itemRemove );
     listContextMenu->addAction( "Clear",  this, &Connect::itemsClear );
-    // removed in Catedral Phase 3 (inline Dracula on context menu — global Catedral.qss handles QMenu styling)
 
-    listWidget = new QListWidget( Form );
-    listWidget->setObjectName( QString::fromUtf8( "listWidget" ) );
-    listWidget->setMaximumSize( QSize( 170, 16777215 ) );
+    listWidget = new QListWidget( brandPanel );
+    listWidget->setObjectName( "ConnectProfileList" );
     listWidget->setContextMenuPolicy( Qt::CustomContextMenu );
     listWidget->addAction( listContextMenu->menuAction() );
 
-    gridLayout->addWidget( ButtonNewProfile, 0, 0, 1, 1 );
-    gridLayout->addWidget( listWidget,       1, 0, 8, 1 );
-    gridLayout->addItem(   horizontalSpacer, 1, 2, 1, 1 );
+    ButtonNewProfile = new QPushButton( "+  New Profile", brandPanel );
+    ButtonNewProfile->setObjectName( "ConnectNewProfile" );
+    ButtonNewProfile->setCursor( Qt::PointingHandCursor );
+    ButtonNewProfile->setMinimumHeight( 34 );
 
-    gridLayout->addWidget( plainTextEdit,    0, 1, 1, 2 );
-    gridLayout->addWidget( label_Name,       2, 1, 1, 1 );
-    gridLayout->addWidget( lineEdit_Name,    2, 2, 1, 1 );
+    brandVersion = new QLabel( brandPanel );
+    brandVersion->setObjectName( "ConnectBrandVersion" );
+    brandVersion->setText( QString( "v%1  ·  %2" )
+        .arg( QString::fromStdString( CatedralNamespace::Version ) )
+        .arg( QString::fromStdString( CatedralNamespace::CodeName ) ) );
 
-    gridLayout->addWidget( label_Host,       3, 1, 1, 1 );
-    gridLayout->addWidget( lineEdit_Host,    3, 2, 1, 1 );
+    brandLayout->addWidget( brandGlyph );
+    brandLayout->addWidget( brandTitle );
+    brandLayout->addWidget( brandTagline );
+    brandLayout->addSpacing( 28 );
+    brandLayout->addWidget( profilesCaption );
+    brandLayout->addSpacing( 8 );
+    brandLayout->addWidget( listWidget, /*stretch=*/1 );
+    brandLayout->addSpacing( 10 );
+    brandLayout->addWidget( ButtonNewProfile );
+    brandLayout->addSpacing( 14 );
+    brandLayout->addWidget( brandVersion );
 
-    gridLayout->addWidget( label_Port,       4, 1, 1, 1 );
-    gridLayout->addWidget( lineEdit_Port,    4, 2, 1, 1 );
+    // =====================================================================
+    //  Panel derecho: formulario de conexion
+    // =====================================================================
+    formPanel = new QFrame( Form );
+    formPanel->setObjectName( "ConnectForm" );
 
-    gridLayout->addWidget( label_User,       5, 1, 1, 1 );
-    gridLayout->addWidget( lineEdit_User,    5, 2, 1, 1 );
+    auto* formLayout = new QVBoxLayout( formPanel );
+    formLayout->setContentsMargins( 36, 34, 36, 30 );
+    formLayout->setSpacing( 0 );
 
-    gridLayout->addWidget( label_Password,   6, 1, 1, 1 );
-    gridLayout->addWidget( lineEdit_Password,6, 2, 1, 1 );
+    formHeader = new QLabel( "Connect to Teamserver", formPanel );
+    formHeader->setObjectName( "ConnectFormHeader" );
 
-    gridLayout->addWidget( ButtonConnect,    8, 2, 1, 1 );
+    formHint = new QLabel( "Authenticate against a running Catedral teamserver.", formPanel );
+    formHint->setObjectName( "ConnectFormHint" );
+    formHint->setWordWrap( true );
+
+    // -- Campos --
+    label_Name = FieldCaption( formPanel, "PROFILE NAME" );
+    lineEdit_Name = new QLineEdit( formPanel );
+    lineEdit_Name->setObjectName( "lineEdit_Name" );
+    lineEdit_Name->setPlaceholderText( "e.g. Operation Spire" );
+    lineEdit_Name->setMinimumHeight( 34 );
+
+    label_Host = FieldCaption( formPanel, "HOST" );
+    lineEdit_Host = new QLineEdit( formPanel );
+    lineEdit_Host->setObjectName( "lineEdit_Host" );
+    lineEdit_Host->setPlaceholderText( "127.0.0.1" );
+    lineEdit_Host->setMinimumHeight( 34 );
+
+    label_Port = FieldCaption( formPanel, "PORT" );
+    lineEdit_Port = new QLineEdit( formPanel );
+    lineEdit_Port->setObjectName( "lineEdit_Port" );
+    lineEdit_Port->setPlaceholderText( "40056" );
+    lineEdit_Port->setMinimumHeight( 34 );
+    lineEdit_Port->setMaximumWidth( 140 );
+
+    label_User = FieldCaption( formPanel, "OPERATOR" );
+    lineEdit_User = new QLineEdit( formPanel );
+    lineEdit_User->setObjectName( "lineEdit_User" );
+    lineEdit_User->setPlaceholderText( "operator handle" );
+    lineEdit_User->setMinimumHeight( 34 );
+
+    label_Password = FieldCaption( formPanel, "PASSWORD" );
+    lineEdit_Password = new QLineEdit( formPanel );
+    lineEdit_Password->setObjectName( "lineEdit_Password" );
+    lineEdit_Password->setEchoMode( QLineEdit::Password );
+    lineEdit_Password->setPlaceholderText( "••••••••" );
+    lineEdit_Password->setMinimumHeight( 34 );
+
+    ButtonConnect = new QPushButton( "Connect", formPanel );
+    ButtonConnect->setObjectName( "ConnectSubmit" );
+    ButtonConnect->setProperty( "primary", true );
+    ButtonConnect->setCursor( Qt::PointingHandCursor );
+    ButtonConnect->setMinimumHeight( 40 );
+
+    // Fila Host + Port lado a lado.
+    auto* hostPortRow = new QHBoxLayout();
+    hostPortRow->setSpacing( 14 );
+    hostPortRow->addLayout( FieldBlock( label_Host, lineEdit_Host ), /*stretch=*/1 );
+    hostPortRow->addLayout( FieldBlock( label_Port, lineEdit_Port ) );
+
+    formLayout->addWidget( formHeader );
+    formLayout->addSpacing( 4 );
+    formLayout->addWidget( formHint );
+    formLayout->addSpacing( 24 );
+    formLayout->addLayout( FieldBlock( label_Name, lineEdit_Name ) );
+    formLayout->addSpacing( 14 );
+    formLayout->addLayout( hostPortRow );
+    formLayout->addSpacing( 14 );
+    formLayout->addLayout( FieldBlock( label_User, lineEdit_User ) );
+    formLayout->addSpacing( 14 );
+    formLayout->addLayout( FieldBlock( label_Password, lineEdit_Password ) );
+    formLayout->addStretch( 1 );
+    formLayout->addWidget( ButtonConnect );
+
+    root->addWidget( brandPanel );
+    root->addWidget( formPanel, /*stretch=*/1 );
+
+    // Compatibilidad: widgets heredados que ya no se muestran.
+    plainTextEdit    = nullptr;
+    gridLayout       = nullptr;
+    horizontalSpacer = nullptr;
 
     paletteGray = new QPalette();
     paletteGray->setColor( QPalette::Base, Qt::gray );
@@ -110,17 +199,8 @@ void CatedralNamespace::UserInterface::Dialogs::Connect::setupUi( QDialog* Form 
     paletteWhite = new QPalette();
     paletteWhite->setColor( QPalette::Base, Qt::white );
 
-    Form->setWindowTitle( "Connect" );
+    Form->setWindowTitle( "Catedral — Connect" );
 
-    ButtonNewProfile->setText( "New Profile" );
-
-    label_Name->setText( "Name:" );
-    label_Host->setText( "Host:" );
-    label_Port->setText( "Port:" );
-    label_User->setText( "User:" );
-    label_Password->setText( "Password:" );
-
-    ButtonConnect->setText( "Connect" );
     ButtonConnect->setFocus();
 
     connect( listWidget, &QListWidget::itemPressed, this, &Connect::itemSelected );
@@ -336,14 +416,16 @@ void CatedralNamespace::UserInterface::Dialogs::Connect::onButton_NewProfile()
 
     listWidget->setCurrentIndex(QModelIndex());
 
-    lineEdit_Name->setText( "Death Star" );
+    lineEdit_Name->clear();
     lineEdit_Name->setPalette(*paletteWhite);
     lineEdit_Name->setReadOnly(false);
 
     lineEdit_Host->setText( "127.0.0.1" );
     lineEdit_Port->setText( "40056" );
-    lineEdit_User->setText( "5pider" );
-    lineEdit_Password->setText( "password" );
+    lineEdit_User->clear();
+    lineEdit_Password->clear();
+
+    lineEdit_Name->setFocus();
 }
 
 void CatedralNamespace::UserInterface::Dialogs::Connect::handleContextMenu( const QPoint &pos )

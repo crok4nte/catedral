@@ -30,6 +30,10 @@ auto WinVersionImage(
     bool    High
 ) -> QImage;
 
+auto GraphOSImage(
+    QString OSVersion
+) -> QImage;
+
 auto GrayScale(
     QImage image
 ) -> QImage;

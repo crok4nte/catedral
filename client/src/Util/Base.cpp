@@ -15,7 +15,10 @@ auto FileRead( const QString& FilePath ) -> QByteArray
 
     // Open File
     auto File = QFile( FilePath );
-    File.open( QIODevice::ReadOnly );
+    if ( ! File.open( QIODevice::ReadOnly ) ) {
+        spdlog::warn( "FileRead: couldn't open {}", path );
+        return Content;
+    }
 
     // Read everything into our byte array buffer
     Content = File.readAll();
@@ -184,6 +187,21 @@ auto WinVersionImage( QString OSVersion, bool High ) -> QImage
         else
             return QImage( ":/images/unknown" );
     }
+}
+
+// Iconos del grafo de sesiones (set v3). Variante azul para sesiones activas;
+// el grayscale en tiempo de ejecucion las atenua a gris cuando estan muertas.
+auto GraphOSImage(
+    QString OSVersion
+) -> QImage {
+    if ( OSVersion.startsWith( "Windows" ) )
+        return QImage( ":/graph/windows-blue" );
+    if ( OSVersion.startsWith( "MacOS" ) || OSVersion.startsWith( "macOS" ) )
+        return QImage( ":/graph/mac-blue" );
+    if ( OSVersion.startsWith( "Linux" ) )
+        return QImage( ":/graph/linux-blue" );
+
+    return QImage( ":/graph/unknown-blue" );
 }
 
 auto CurrentDateTime(

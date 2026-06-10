@@ -357,7 +357,7 @@ void CatedralNamespace::UserInterface::CatedralUi::retranslateUi(QMainWindow* ma
     menuCatedral->setTitle( "Catedral" );
     menuView->setTitle( "View" );
     menuAttack->setTitle( "Attack" );
-    menuHelp->setTitle( "Help" );
+    menuHelp->setTitle( "About" );
     MenuSession->setTitle( "Session View" );
 
     CatedralWindow->setFocus();

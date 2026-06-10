@@ -14,7 +14,9 @@
 
 # ── Runtime data del teamserver ─────────────────
 # toolchains mingw, db, certs, loot (≈1GB) — se generan/descargan
-data/
+# Anclado a la raiz: sin la barra inicial tambien ignoraba client/data/
+# (tema QSS, iconos, fuentes de la UI), dejando los assets fuera de git.
+/data/
 teamserver/data/
 
 # ── Bases de datos del cliente ──────────────────

@@ -1,0 +1,80 @@
+<!DOCTYPE RCC><RCC version="1.0">
+
+    <qresource prefix="/">
+        <file>Catedral.ico</file>
+    </qresource>
+
+    <qresource prefix="/icons">
+        <file alias="TabClose">../data/icons/tab-close.png</file>
+        <file alias="TabCloseHover">../data/icons/tab-close-hover.png</file>
+        <file alias="Monaco">../data/resources/Monaco.ttf</file>
+        <file alias="FileBrowserFolder">../data/img/FileBrowser/Folder.png</file>
+        <file alias="FileBrowserFile">../data/img/FileBrowser/File.png</file>
+        <file alias="FileBrowserHardDisk">../data/img/FileBrowser/HardDisk.png</file>
+
+        <file alias="DeadWhite">../data/img/DeadWhite.png</file>
+        <file alias="CatedralLogo">../data/icons/catedral-logo.svg</file>
+        <file alias="ChevronRight">../data/icons/sidebar/chevron-right.svg</file>
+        <file alias="ChevronLeft">../data/icons/sidebar/chevron-left.svg</file>
+        <file alias="SidebarSessions">../data/icons/sidebar/sidebar-sessions.svg</file>
+        <file alias="SidebarGraph">../data/icons/sidebar/sidebar-graph.svg</file>
+        <file alias="SidebarListeners">../data/icons/sidebar/sidebar-listeners.svg</file>
+        <file alias="SidebarPayload">../data/icons/sidebar/sidebar-payload.svg</file>
+        <file alias="SidebarLoot">../data/icons/sidebar/sidebar-loot.svg</file>
+        <file alias="SidebarChat">../data/icons/sidebar/sidebar-chat.svg</file>
+        <file alias="SidebarLogs">../data/icons/sidebar/sidebar-logs.svg</file>
+        <file alias="SidebarHelp">../data/icons/sidebar/sidebar-help.svg</file>
+        <file alias="FontSpaceGrotesk">../data/fonts/SpaceGrotesk.ttf</file>
+        <file alias="FontJetBrainsMono">../data/fonts/JetBrainsMono-Regular.ttf</file>
+        <file alias="FontJetBrainsMonoBold">../data/fonts/JetBrainsMono-Bold.ttf</file>
+    </qresource>
+
+    <qresource prefix="/images">
+        <file alias="linux">../data/resources/linux-icon.png</file>
+        <file alias="linux-high">../data/resources/linux-icon-high.png</file>
+        <file alias="macos">../data/resources/macos-icon.png</file>
+        <file alias="macos-high">../data/resources/macos-icon-high.png</file>
+        <file alias="unknown">../data/resources/unknown-icon.png</file>
+        <file alias="unknown-high">../data/resources/unknown-icon-high.png</file>
+        <file alias="win7-vista">../data/resources/win7-vista-icon.png</file>
+        <file alias="win7-vista-high">../data/resources/win7-vista-icon-high.png</file>
+        <file alias="win10-8">../data/resources/win10-8-icon.png</file>
+        <file alias="win10-8-high">../data/resources/win10-8-icon-high.png</file>
+        <file alias="win11">../data/resources/win11-icon.png</file>
+        <file alias="win11-high">../data/resources/win11-icon-high.png</file>
+        <file alias="winxp">../data/resources/winxp-icon.png</file>
+        <file alias="winxp-high">../data/resources/winxp-icon-high.png</file>
+
+        <file alias="SessionCatedral">../data/resources/firewall.png</file>
+
+        <file alias="linux-mono">../data/resources/linux-mono.svg</file>
+        <file alias="macos-mono">../data/resources/macos-mono.svg</file>
+        <file alias="windows-mono">../data/resources/windows-mono.svg</file>
+        <file alias="unknown-mono">../data/resources/unknown-mono.svg</file>
+    </qresource>
+
+    <qresource prefix="/graph">
+        <file alias="windows-blue">../data/icons/graph/v3/windows-100-blue.png</file>
+        <file alias="windows-grey">../data/icons/graph/v3/windows-100-grey.png</file>
+        <file alias="linux-blue">../data/icons/graph/v3/linux-100-blue.png</file>
+        <file alias="linux-grey">../data/icons/graph/v3/linux-100-grey.png</file>
+        <file alias="mac-blue">../data/icons/graph/v3/mac-100-blue.png</file>
+        <file alias="mac-grey">../data/icons/graph/v3/mac-100-grey.png</file>
+        <file alias="unknown-blue">../data/icons/graph/v3/unknown-100-blue.png</file>
+        <file alias="unknown-grey">../data/icons/graph/v3/unknown-100-grey.png</file>
+        <file alias="firewall">../data/icons/graph/v3/firewall-100.png</file>
+        <file alias="cloud">../data/icons/graph/v3/cloud-100.png</file>
+    </qresource>
+
+    <qresource prefix="/treewidget/">
+        <file alias="branch-closed">../data/img/treewidget/stylesheet-branch-closed.png</file>
+        <file alias="branch-more">../data/img/treewidget/stylesheet-branch-more.png</file>
+        <file alias="vline">../data/img/treewidget/stylesheet-vline.png</file>
+        <file alias="branch-end">../data/img/treewidget/stylesheet-branch-end.png</file>
+        <file alias="branch-open">../data/img/treewidget/stylesheet-branch-open.png</file>
+    </qresource>
+
+    <qresource prefix="/stylesheets">
+        <file alias="Catedral">../data/themes/Catedral.qss</file>
+    </qresource>
+</RCC>

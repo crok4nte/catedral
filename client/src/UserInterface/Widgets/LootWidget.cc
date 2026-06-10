@@ -339,7 +339,9 @@ void LootWidget::onAgentChange( const QString& text )
     ScreenshotImage->setPixmap( QPixmap() );
 
     // todo: free columns items
-    for ( int i = ScreenshotTable->rowCount(); i >= 0; i-- )
+    // rowCount() es uno mas alla del ultimo indice valido; empezar ahi era un
+    // removeRow() fuera de rango (no-op) en la primera vuelta.
+    for ( int i = ScreenshotTable->rowCount() - 1; i >= 0; i-- )
         ScreenshotTable->removeRow( i );
 
     for ( auto& item : LootItems )

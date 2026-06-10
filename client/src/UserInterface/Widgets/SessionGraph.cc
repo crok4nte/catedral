@@ -60,7 +60,7 @@ Node* GraphWidget::GraphNodeAdd( SessionItem Session )
         this
     );
 
-    item->NodeEdge = new Edge( MainNode->Node, item, QColor( CatedralNamespace::Util::ColorText::Colors::Hex::Green ) );
+    item->NodeEdge = new Edge( MainNode->Node, item, QColor( "#9A9AA0" ) );
     item->Parent   = MainNode->Node;
     item->NodeID   = Session.Name;
     item->Session  = Session;
@@ -87,15 +87,18 @@ void GraphWidget::GraphNodeRemove( SessionItem Session )
     {
         if ( Session.Name.compare( NodeList[ i ]->Name ) == 0 )
         {
-            GraphScene->removeItem( NodeList[ i ]->Node->NodeEdge );
-            GraphScene->removeItem( NodeList[ i ]->Node );
+            auto* node = NodeList[ i ]->Node;
 
+            GraphScene->removeItem( node->NodeEdge );
+            GraphScene->removeItem( node );
+
+            // Desvincular del padre ANTES de borrar la entrada: hacerlo despues
+            // del erase accedia a NodeList[i] ya desplazado (use-after-erase).
+            MainNode->Node->removeChild( node );
             NodeList.erase( NodeList.begin() + i );
-            MainNode->Node->removeChild( NodeList[ i ]->Node );
 
-            /* delete NodeList[ i ]->Node->NodeEdge;
-            delete NodeList[ i ]->Node;
-            delete NodeList[ i ]; */
+            /* delete node->NodeEdge;
+            delete node; */
 
             return;
         }
@@ -125,7 +128,7 @@ void GraphWidget::GraphPivotNodeAdd( QString AgentID, SessionItem Session )
             if ( i->NodeID.compare( AgentID ) == 0 )
             {
                 item->NodeID   = Session.Name;
-                item->NodeEdge = new Edge( i, item, QColor( CatedralNamespace::Util::ColorText::Colors::Hex::Purple ) );
+                item->NodeEdge = new Edge( i, item, QColor( "#9A9AA0" ) );
                 item->Parent   = i;
                 
                 i->appendChild( item );
@@ -156,7 +159,7 @@ void GraphWidget::GraphPivotNodeDisconnect( QString AgentID )
             if ( i->dest->NodeID.compare( AgentID ) == 0 )
             {
                 i->dest->Disconnected = true;
-                i->Color( QColor( CatedralNamespace::Util::ColorText::Colors::Hex::Red ) );
+                i->Color( QColor( "#9A9AA0" ) );
 
                 i->dest->update();
                 i->source->update();
@@ -178,13 +181,13 @@ void GraphWidget::GraphPivotNodeReconnect( QString ParentAgentID, QString ChildA
             auto i = qgraphicsitem_cast<Edge*>( g_item );
             if ( i->dest->NodeID.compare( ChildAgentID ) == 0 )
             {
-                GraphScene->addItem( new Edge( GraphNodeGet( ParentAgentID ), i->dest, QColor( CatedralNamespace::Util::ColorText::Colors::Hex::Purple ) ) );
+                GraphScene->addItem( new Edge( GraphNodeGet( ParentAgentID ), i->dest, QColor( "#9A9AA0" ) ) );
                 GraphScene->removeItem( i );
 
                 // TODO: somehow remove/free i (Edge*)
                 // i->source = GraphNodeGet( ParentAgentID );
                 // i->dest->Disconnected = false;
-                // i->Color( QColor( CatedralNamespace::Util::ColorText::Colors::Hex::Purple ) );
+                // i->Color( QColor( "#9A9AA0" ) );
 
                 // i->dest->update();
                 // i->source->update();
@@ -853,9 +856,14 @@ void Edge::paint( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* )
     auto destArrowP1   = destPoint   + QPointF( sin( angle - M_PI / 3 ) * arrowSize, cos( angle - M_PI / 3 ) * arrowSize );
     auto destArrowP2   = destPoint   + QPointF( sin( angle - M_PI + M_PI / 3 ) * arrowSize, cos( angle - M_PI + M_PI / 3 ) * arrowSize );
 
-    // Draw the line itself
-    painter->setPen( QPen( color, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin ) );
+    // Linea estilo "cadena": eslabones cortos en gris (no verde).
+    auto pen = QPen( color, 1.6, Qt::CustomDashLine, Qt::RoundCap, Qt::RoundJoin );
+    pen.setDashPattern( { 1.5, 2.5 } );
+    painter->setPen( pen );
     painter->drawLine( line );
+
+    // Punta de flecha solida, mismo gris.
+    painter->setPen( QPen( color, 1.6, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin ) );
     painter->setBrush( color );
 
     if ( source->NodeType == NodeItemType::MainNode )
@@ -878,7 +886,7 @@ Node::Node( NodeItemType NodeType, QString NodeLabel, GraphWidget* graphWidget )
     this->NodeLabel = NodeLabel;
 
     if ( NodeType == NodeItemType::MainNode )
-        this->NodePainterSize = QRectF( -60, -70, 120, 120 );
+        this->NodePainterSize = QRectF( -34, -38, 68, 68 );
     else
         this->NodePainterSize = QRectF( -150, -150, 400, 230 );
 
@@ -968,7 +976,7 @@ void Node::paint( QPainter *painter, const QStyleOptionGraphicsItem* option, QWi
     }
     else if ( NodeType == NodeItemType::MainNode )
     {
-        auto image1 = QImage( ":/images/SessionCatedral" );
+        auto image1 = QImage( ":/graph/firewall" );
 
         painter->drawImage( NodePainterSize, image1 );
 
@@ -977,9 +985,7 @@ void Node::paint( QPainter *painter, const QStyleOptionGraphicsItem* option, QWi
     else if ( NodeType == NodeItemType::Session )
     {
         auto text   = NodeLabel.split( " " );
-        auto image1 = ( Session.Elevated.compare( "true" ) == 0 ) ?
-                      WinVersionImage( Session.OS, true ) :
-                      WinVersionImage( Session.OS, false );
+        auto image1 = GraphOSImage( Session.OS );
 
         if ( Disconnected )
         {
@@ -997,10 +1003,10 @@ void Node::paint( QPainter *painter, const QStyleOptionGraphicsItem* option, QWi
             }
         }
 
-        painter->drawImage( QRectF( -40, -35, 90, 90 ), image1 );
+        painter->drawImage( QRectF( -28, -24, 56, 56 ), image1 );
         painter->setPen( QPen( Qt::white ) );
-        painter->drawText( -90, 60, text[ 0 ] + " @ " + text[ 1 ] );
-        painter->drawText( -80, 75, text[ 2 ] );
+        painter->drawText( -90, 44, text[ 0 ] + " @ " + text[ 1 ] );
+        painter->drawText( -80, 58, text[ 2 ] );
 
         return;
     }

@@ -33,14 +33,59 @@ About::About( QDialog* dialog )
     textBrowser->setOpenExternalLinks(true);
 
     gridLayout->addWidget(textBrowser, 1, 0, 1, 3);
-    label->setText(QCoreApplication::translate("Dialogs", R"(<html><head/><body><p align="center"><span style=" font-size:22pt;">Catedral</span></p></body></html>)", nullptr));
-    pushButton->setText(QCoreApplication::translate("Dialogs", "Close", nullptr));
-    textBrowser->setHtml(QCoreApplication::translate("Dialogs", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                               "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                               "p, li { white-space: pre-wrap; }\n"
-                                                               "</style></head><body style=\" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                                               "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:x-large; font-weight:600;\">About Catedral</span> </p>\n"
-                                                               "<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Welcome to Catedral. Catedral is a Software for Adversary Simulations and Red Team Operations by <a href=\"https://www.twitter.com/C5pider\"><span style=\" text-decoration: underline; color:#e100ff;\">5pider</span></a>. </p></body></html>", nullptr));
+    const QString Version  = QString::fromStdString( CatedralNamespace::Version );
+    const QString CodeName = QString::fromStdString( CatedralNamespace::CodeName );
+
+    label->setText(
+        "<html><head/><body>"
+        "<p align=\"center\" style=\"margin:0;\">"
+            "<span style=\"font-size:30pt; font-weight:700; letter-spacing:4px; color:#F2F2F4;\">CATEDRAL</span>"
+        "</p>"
+        "<p align=\"center\" style=\"margin:2px 0 0 0;\">"
+            "<span style=\"font-size:10pt; letter-spacing:3px; color:#6E8FB0;\">COMMAND &amp; CONTROL FRAMEWORK</span>"
+        "</p>"
+        "</body></html>" );
+
+    pushButton->setText( "Close" );
+
+    textBrowser->setOpenExternalLinks( true );
+    textBrowser->setHtml(
+        "<html><head><style type=\"text/css\"> p, li { white-space: pre-wrap; } </style></head>"
+        "<body style=\"font-family:'Space Grotesk','Inter','Segoe UI',sans-serif; font-size:10pt; color:#C8CDD4;\">"
+
+        "<p align=\"center\" style=\"margin:4px 0;\">"
+            "<span style=\"font-family:'JetBrains Mono',monospace; color:#6A6A72; font-size:9pt;\">"
+            "build " + Version + " &nbsp;·&nbsp; codename &ldquo;" + CodeName + "&rdquo;"
+            "</span>"
+        "</p>"
+
+        "<p align=\"center\" style=\"margin:14px 24px; color:#9AA7B4;\">"
+            "<i>&ldquo;Every operation deserves a cathedral &mdash; quiet on the outside, "
+            "vast and deliberate within.&rdquo;</i>"
+        "</p>"
+
+        "<p style=\"margin:14px 8px 4px 8px; color:#7E8A97; font-size:9pt; letter-spacing:1px;\">"
+            "WHAT IS CATEDRAL"
+        "</p>"
+        "<p style=\"margin:0 8px; color:#C8CDD4;\">"
+            "Catedral is a post-exploitation command &amp; control framework built for "
+            "adversary simulation and red team operations: multiplayer teamserver, "
+            "modular listeners, in-memory implants and a fast, modern operator UI."
+        "</p>"
+
+        "<p style=\"margin:16px 8px 4px 8px; color:#7E8A97; font-size:9pt; letter-spacing:1px;\">"
+            "OPERATOR &amp; AUTHOR"
+        "</p>"
+        "<p style=\"margin:0 8px;\">"
+            "Crafted and operated by "
+            "<span style=\"color:#6E8FB0; font-weight:700;\">4p0stol</span>."
+        "</p>"
+
+        "<p align=\"center\" style=\"margin:18px 8px 6px 8px; color:#55555C; font-size:8pt;\">"
+            "For authorized engagements only &mdash; use responsibly."
+        "</p>"
+
+        "</body></html>" );
 
     QObject::connect( pushButton, &QPushButton::clicked, this, &About::onButtonClose );
     QMetaObject::connectSlotsByName( AboutDialog );

@@ -286,7 +286,10 @@ void CatedralNamespace::UserInterface::Widgets::ProcessList::onButton_Refresh() 
 {
     for ( auto & Session : CatedralX::Teamserver.Sessions )
     {
-        if ( Session.Name.compare( Session.Name ) == 0 )
+        // Antes comparaba Session.Name consigo mismo (siempre true), por lo que
+        // el refresh disparaba sobre la primera sesion con ProcessList, no la
+        // de esta pestania. Comparar contra la sesion miembro del widget.
+        if ( Session.Name.compare( this->Session.Name ) == 0 )
         {
             if ( Session.ProcessList )
             {
